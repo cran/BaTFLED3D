@@ -31,7 +31,7 @@ update_mode1_CP <- function(m, d, params) {
     if(params$verbose) print("Updating prior lambda vector for mode 1")
     
     m1.A.var <- matrix(0, P, R)
-    for(r in 1:R) m1.A.var[,r] <- diag(m$mode1.A.cov[,,r])
+    for(r in 1:R) m1.A.var[,r] <- diagonal(m$mode1.A.cov[,,r])
     if(params$row.share) {
       m$mode1.lambda.scale <- 1/(.5*(rowSums(m$mode1.A.mean^2 + m1.A.var)) + 1/m$m1.beta)
     } else m$mode1.lambda.scale <- 1/(.5*(m$mode1.A.mean^2 + m1.A.var) + 1/m$m1.beta)
@@ -41,9 +41,9 @@ update_mode1_CP <- function(m, d, params) {
     lambda.exp <- m$mode1.lambda.shape * m$mode1.lambda.scale
     for(r in 1:R) {
       if(params$row.share) {
-        m$mode1.A.cov[,,r] <- chol2inv(chol(diag(lambda.exp) + (1/m$m1.sigma2) * m$m1Xm1X))
+        m$mode1.A.cov[,,r] <- chol2inv(chol(diagonal(lambda.exp) + (1/m$m1.sigma2) * m$m1Xm1X))
       } else 
-        m$mode1.A.cov[,,r] <- chol2inv(chol(diag(lambda.exp[,r]) + (1/m$m1.sigma2) * m$m1Xm1X))
+        m$mode1.A.cov[,,r] <- chol2inv(chol(diagonal(lambda.exp[,r]) + (1/m$m1.sigma2) * m$m1Xm1X))
     }
 
     # Update A means
@@ -74,7 +74,7 @@ update_mode1_CP <- function(m, d, params) {
       }
       m$mode1.H.mean[i,r] <- m$mode1.H.var[i,r] * ((1/m$sigma2) *
         sum(outer(m$mode2.H.mean[,r], m$mode3.H.mean[,r]) *
-            (d$resp[i,,] - (sweep(m$mode2.H.mean[,-r], MARGIN=2, m$mode1.H.mean[i,-r], '*') %*%
+            (d$resp[i,,] - (sweep(m$mode2.H.mean[,-r,drop=F], MARGIN=2, m$mode1.H.mean[i,-r], '*') %*%
             t(m$mode3.H.mean[,-r,drop=F]))), na.rm=T) + 1/m$m1.sigma2 * x_times_a)
     }
   }

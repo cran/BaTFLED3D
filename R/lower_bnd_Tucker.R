@@ -48,7 +48,7 @@ lower_bnd_Tucker <- function(m, d) {
     # } else {
 
     m1.A.var <- matrix(0, P, R1) # This could be stored earlier
-    for(r1 in 1:R1) m1.A.var[,r1] <- diag(m$mode1.A.cov[,,r1])
+    for(r1 in 1:R1) m1.A.var[,r1] <- diagonal(m$mode1.A.cov[,,r1])
     
     exp.p.mode1.A <- -.5*P*R1*log.2.pi + .5*sum(exp.log.mode1.lambda -
       exp.mode1.lambda * (m$mode1.A.mean^2 + m1.A.var))
@@ -73,7 +73,10 @@ lower_bnd_Tucker <- function(m, d) {
                               (1-m$mode1.lambda.shape) * digamma(m$mode1.lambda.shape))
 
     m1.A.dets <- rep(0, R1)
-    for(r1 in 1:R1) m1.A.dets[r1] <- determinant(m$mode1.A.cov[,,r1], logarithm=T)$modulus
+    for(r1 in 1:R1) 
+      if(is.matrix(m$mode1.A.cov[,,r1])) {
+        m1.A.dets[r1] <- determinant(m$mode1.A.cov[,,r1], logarithm=T)$modulus
+      } else m1.A.dets[r1] <- m$mode1.A.cov[,,r1]
     exp.q.mode1.A <- -sum(P/2*(log.2.pi+1) -.5*m1.A.dets)
   } else {
     exp.p.mode1.lambda <- 0
@@ -94,7 +97,7 @@ lower_bnd_Tucker <- function(m, d) {
                                 safe_log(gamma(m$m2.alpha)))
 
     m2.A.var <- matrix(0, Q, R2) # This could be stored earlier
-    for(r2 in 1:R2) m2.A.var[,r2] <- diag(m$mode2.A.cov[,,r2])
+    for(r2 in 1:R2) m2.A.var[,r2] <- diagonal(m$mode2.A.cov[,,r2])
 
     exp.p.mode2.A <- -.5 * Q*R2 * log.2.pi + 1/2 * sum(exp.log.mode2.lambda -
       exp.mode2.lambda * (m$mode2.A.mean^2 + m2.A.var))
@@ -119,7 +122,10 @@ lower_bnd_Tucker <- function(m, d) {
                                 (1-m$mode2.lambda.shape) * digamma(m$mode2.lambda.shape))
 
     m2.A.dets <- rep(0, R2)
-    for(r2 in 1:R2) m2.A.dets[r2] <- determinant(m$mode2.A.cov[,,r2], logarithm=T)$modulus
+    for(r2 in 1:R2)
+      if(is.matrix(m$mode2.A.cov[,,r2])) {
+        m2.A.dets[r2] <- determinant(m$mode2.A.cov[,,r2], logarithm=T)$modulus
+      } else m2.A.dets[r2] <- m$mode2.A.cov[,,r2]
     exp.q.mode2.A <- -sum(Q/2*(log.2.pi+1) -.5*m2.A.dets)
   } else {
     exp.p.mode2.lambda <- 0
@@ -140,7 +146,7 @@ lower_bnd_Tucker <- function(m, d) {
                                 safe_log(gamma(m$m3.alpha)))
 
     m3.A.var <- matrix(0, S, R3) # This could be stored earlier
-    for(r3 in 1:R3) m3.A.var[,r3] <- diag(m$mode3.A.cov[,,r3])
+    for(r3 in 1:R3) m3.A.var[,r3] <- diagonal(m$mode3.A.cov[,,r3])
 
     exp.p.mode3.A <- -.5 * S*R3 * log.2.pi + 1/2 * sum(exp.log.mode3.lambda -
       exp.mode3.lambda * (m$mode3.A.mean^2 + m3.A.var))
@@ -165,7 +171,10 @@ lower_bnd_Tucker <- function(m, d) {
                                 (1-m$mode3.lambda.shape) * digamma(m$mode3.lambda.shape))
 
     m3.A.dets <- rep(0, R3)
-    for(r3 in 1:R3) m3.A.dets[r3] <- determinant(m$mode3.A.cov[,,r3], logarithm=T)$modulus
+    for(r3 in 1:R3) 
+      if(is.matrix(m$mode3.A.cov[,,r3])) {
+        m3.A.dets[r3] <- determinant(m$mode3.A.cov[,,r3], logarithm=T)$modulus
+      } else m3.A.dets[r3] <- m$mode3.A.cov[,,r3]
     exp.q.mode3.A <- -sum(S/2*(log.2.pi+1) -.5*m3.A.dets)
   } else {
     exp.p.mode3.lambda <- 0

@@ -135,7 +135,7 @@ if(model.params$decomp=='Tucker') {
   core.reorder <- trained$core.mean[abs(m1.H.order), abs(m2.H.order), abs(m3.H.order)]
   core.reorder <- core.reorder * outer(sign(m1.H.order), outer(sign(m2.H.order), sign(m3.H.order)))
   im_2_mat(toy$core[,,1], core.reorder[,,1], sort=F, center=T, scale='all',
-           main1='Core mode 1 slice true', main2='Core mode 1 slice learned')
+           main1='Core slice true', main2='Core slice learned')
 }
 
 ## ----ROC curves, message=FALSE, warning=FALSE, fig.align='center', results='hide', fig.width = 6, fig.height=4----
