@@ -21,13 +21,21 @@ The input matrices should have samples as the rows and features as columns. A ke
 computed across all samples in the first matrix with respect to the samples in the second matrix.
 The two matrices must have the same features. If all features are binary 0,1, then
 the Jaccard similarity kernel will be used, otherwise, a Gaussian kernel with standard deviation
-equal to s times the mean distances between samples.
+equal to s times the mean euclidean distances between samples in the second matrix.
+If there are samples with all NA values, they will not appear in the kernel matrix columns.
+The row for that sample will just be all NAs.
 }
 \examples{
 m1 <- matrix(rnorm(200), 8, 25, dimnames=list(paste0('sample.', 1:8), paste0('feat.', 1:25)))
 m2 <- matrix(rnorm(100), 4, 25, dimnames=list(paste0('sample.', 9:12), paste0('feat.', 1:25)))
 kernelize(m1, m1)
 kernelize(m1, m1, s=.5)
+kernelize(m2, m1)
+m1 <- matrix(rbinom(200, 1, .5), 8, 25, 
+             dimnames=list(paste0('sample.', 1:8), paste0('feat.', 1:25)))
+m2 <- matrix(rbinom(25, 1, .5), 1, 25, 
+             dimnames=list(c('sample.9'), paste0('feat.', 1:25)))
+kernelize(m1, m1)
 kernelize(m2, m1)
 }
 
